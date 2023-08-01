@@ -1,0 +1,11 @@
+/*STYLE*/
+@import '../public/admin/css/import/fonts.css';
+@import '../public/admin/css/import/global.css';
+@import '../public/admin/css/import/list_post.css';
+@import '../public/admin/css/import/list_product.css';
+@import '../public/admin/css/import/add_cat.css';
+@import '../public/admin/css/import/info_account.css';
+@import '../public/admin/css/import/change_pass.css';
+@import '../public/admin/css/import/sidebar.css';
+@import '../public/admin/css/import/menu.css';
+@import '../public/admin/css/import/detail_order.css';
