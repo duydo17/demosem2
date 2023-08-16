@@ -20,14 +20,20 @@
                 <div style="width: 400px; display: flex;">
                     <label for="name">Tên slider: </label>
                     <input type="text" style="flex: 1;" name="name" id="name">
+                  
                 </div>
+                @error('name')
+                <span class="text-danger" style="color: red;">{{ $message }}</span>
+                @enderror
                 <br>
 
                 <label>Hình ảnh</label>
                 <div id="uploadFile">
                     <input type="file" name="file" id="file">
                   
-                   
+                    @error('file.*')
+                <span class="text-danger" style="color: red;">{{ $message }}</span>
+                @enderror
                 </div>
 
                 <button type="submit" name="btn-submit" class="btn btn-success" id="btn-submit">Thêm Slider</button>

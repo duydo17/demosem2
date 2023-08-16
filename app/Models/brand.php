@@ -12,7 +12,7 @@ class brand extends Model
         'user_id',        
     ];
     public function users(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Member::class);
     }
     public function categories()
   {

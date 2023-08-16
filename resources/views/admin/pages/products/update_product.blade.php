@@ -6,11 +6,16 @@
         width: 150px;
         font-weight: bold;
     }
+    
+.text-danger{
+        color: red;
+    }
+
 </style>
 <div id="content" class="fl-right">
     <div class="section" id="title-page">
         <div class="clearfix">
-            <h3 id="index" class="fl-left">Thêm sản phẩm</h3>
+            <h3 id="index" class="fl-left">Cập Nhật sản phẩm</h3>
         </div>
     </div>
     <div class="section" id="detail-page">
@@ -51,7 +56,7 @@
                 </br>
                 <div >
                     <label for="config">Mô tả ngắn</label>
-                    <textarea style="flex: 1;" value="{{$product->config}}" name="config" id="config"  class="ckeditor">{{$product->config}}</textarea>
+                    <textarea style="flex: 1;"  name="config" id="config"  class="ckeditor">{{$product->config}}</textarea>
                     @error('config')
                 <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -93,7 +98,7 @@
                 </select>
                 </div></br>
                 
-                <button type="submit" class="btn btn-success" style="color: white;" name="btn-submit" id="btn-submit">Thêm mới</button>
+                <button type="submit" class="btn btn-success" style="color: white;" name="btn-submit" id="btn-submit">Cập Nhật Sản Phẩm</button>
             </form>
         </div>
     </div>

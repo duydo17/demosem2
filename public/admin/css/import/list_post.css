@@ -30,6 +30,7 @@
 #content{ width: 82%; border-left: 1px solid #ddd; padding: 20px;}
 #add-new{
     display: inline-block;
+    border-radius: 20px;
     color: #fff;
     background: #4fa327;
     padding: 4px 15px;

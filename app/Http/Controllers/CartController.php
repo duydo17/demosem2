@@ -8,8 +8,13 @@ use App\Models\Orderdetail;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 use App\Models\product;
+use App\Models\User;
+use App\Models\member;
 use App\Models\product_thumbnail;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailController;
+use App\Mail\orderMail;
+use RealRashid\SweetAlert\Facades\Aler;
 class CartController extends Controller
 {
 
@@ -18,20 +23,22 @@ class CartController extends Controller
         return view('users.pages.showcart');
     }
     function add_cart(Request $request, $id)
-    {
-       
+    {       
         $product = Product::find($id);
-        
+        $qty = 1;
+        if($request->input('num-order')){
+            $qty = $request->input('num-order');
+        }
         Cart::add([
             'id' =>   $product->id,
             'code' =>   $product->code,       
             
             'name' =>   $product ->name,
-            'qty' => 1,
+            'qty' => $qty,
             'price' =>   $product->price,
              'options' => ['thumbnail' => $product->product_thumbnail[0]->image]
         ]);
-        return redirect()->route('show.cart');
+        return redirect()->back();
     }
     function remove_cart($rowId){
         Cart::remove($rowId);
@@ -49,63 +56,73 @@ class CartController extends Controller
         }
         return redirect()->route('show.cart');
     }
-    function checkout(){
-        return view('users.pages.checkout');
+    function checkout(Request $request){
+       $id = $request->session()->get('id');
+        $user = Member::find($id);
+        return view('users.pages.checkout',compact('user'));
     }
     function add_checkout(Request $request){
         $request->validate(
-            [
-                'fullname' => 'required',
-                'email' => 'required',
-                'address' => 'required',
-                'phone' => 'required|numeric|max:11|min:10',
-                          
-
+            [   'address' => 'required',
+                'phone' => 'required|numeric|digits:10',  
+                'payment-method'=>'required',                        
             ],
         [
             'required' => ':attribute không được để trống',
             'numeric' => ':arttribute phải là số',
-            'max' => ':arttribute có tối đa 11 ký tự ',       
-            'min'=>':arttribute có tối thiểu 10 ký tự '        
-        ],[
-            'fullname'=>'họ và tên',
-            'email'=>'email',
+            'digits' => ':attribute cần phải có chính xác :digits chữ số',
+               
+        ],[            
             'address'=>'địa chỉ',
             'phone'=>'số điện thoại',
-            
+            'payment-method'=>'Hình thức thanh toán',            
         ]);
-        //add customer
-        $customer = new Customer();
-        $customer->fullname = $request->input('fullname');
-        $customer->email = $request->input('email');
-        $customer->address = $request->input('address');
-        $customer->phone = $request->input('phone');
-        $customer->note = $request->input('note');
-       $customer->save();
-        //add order
-        $order = new Order();
-        $order->order_code = Str::random(10);
-        $order->customer_id = $customer->id;
-        $order->product_qty = Cart::count();
-        $order->cart_total = Cart::total();
-        $order->status = "Đang xử lý";
-        $order->payment = $request->input('payment-method');
-        $order->save();
-
-        foreach(Cart::content() as $row){
-            $orderdetail = new Orderdetail();
-            $orderdetail->order_id = $order->id;
-            $orderdetail->product_id = $row->id;
-            $orderdetail->product_name = $row->name;
-            $orderdetail->total_price = $row->total;
-            $orderdetail->quantity = $row->qty;
-            $orderdetail->save();
-            $product = Product::find( $row->id);
-            $product->stock= $product->stock - $row->qty;
-            $product->save();            
-
+        if(Cart::count()>0){
+            $id = $request->session()->get('id');
+            $user = Member::find($id);
+            //add customer
+            $customer = new Customer();
+            $customer->fullname =  $user->fullname;
+            $customer->email =  $user->email;
+            $customer->address = $request->input('address');
+            $customer->phone = $request->input('phone');
+          
+           $customer->save();
+            //add order
+            $order = new Order();
+            $order->order_code = Str::random(10);
+            $order->customer_id = $customer->id;
+            $order->user_id = $user->id;
+            $order->product_qty = Cart::count();
+            $order->cart_total = Cart::total();
+            $order->status = "đang đóng gói";
+            $order->payment = $request->input('payment-method');
+            $order->note = $request->input('note');
+            $order->save();
+    
+            foreach(Cart::content() as $row){
+                $orderdetail = new Orderdetail();
+                $orderdetail->order_id = $order->id;
+                $orderdetail->product_id = $row->id;
+                $orderdetail->product_name = $row->name;
+                $orderdetail->total_price = $row->total;
+                $orderdetail->quantity = $row->qty;
+                $orderdetail->save();
+                $product = Product::find( $row->id);
+                $product->stock= $product->stock - $row->qty;
+                $product->save();            
+    
+            }
+            $subject = "Xác Nhập Đặt Hàng Thành Công";
+            $message = "Mã Đơn Hàng Của Bạn Là: ".$order->id;
+            Mail::to($user->email)
+            ->send(new orderMail($subject,$message));
+            Cart::destroy();
+            return redirect()->route('home')->with('success','Đặt Hàng Thành Công');
+        }else{
+            return redirect()->route('home')->with('error','Chưa có sản phẩm trong giỏ hàng');
         }
-        Cart::destroy();
-        return redirect()->route('home');
-    }
+      
+        }
+       
 }

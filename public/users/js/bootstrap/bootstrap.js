@@ -8,6 +8,7 @@
  * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=b4196a9fd93da52ecb59ab811db4b200)
  * Config saved to config.json and https://gist.github.com/b4196a9fd93da52ecb59ab811db4b200
  */
+window.Swal = require('sweetalert2');
 if (typeof jQuery === 'undefined') {
     throw new Error('Bootstrap\'s JavaScript requires jQuery')
 }

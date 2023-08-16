@@ -10,8 +10,14 @@
     </div>
     <div class="section" id="detail-page">
         <div class="section-detail">
+            <div class="filter-wp clearfix">
+                <form action="#" class="form-s fl-right">
+                    <input type="text" name="keyword" id="keyword" value="{{request()->input('keyword')}}">
+                    <input type="submit" name="btn_search" value="Tìm kiếm">
+                </form>
+            </div>
             <div class="table-responsive">
-            @if (session('success'))
+                @if (session('success'))
                 <div class="alert alert-success">
                     <strong>Success!</strong> {{session('success')}}
                 </div>
@@ -19,7 +25,7 @@
                 <table class="table list-table-wp">
                     <thead>
                         <tr>
-                           
+
                             <td><span class="thead-text">STT</span></td>
                             <td><span class="thead-text">Mã sản phẩm</span></td>
                             <td><span class="thead-text">Hình ảnh</span></td>
@@ -38,7 +44,7 @@
                         @endphp
                         @foreach($products as $product)
                         <tr>
-                            
+
                             <td><span class="tbody-text">{{$stt++}}</h3></span>
                             <td><span class="tbody-text">{{$product->code}}</h3></span>
                             <td>
@@ -52,7 +58,7 @@
                                 </div>
                                 <ul class="list-operation fl-right">
                                     <li><a href="{{route('update.product',$product->id)}}" title="Sửa" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                    <li><a href="{{route('delete.product',$product->id)}}"onclick="return confirm('bạn muốn xóa sản phẩm này?')" title="Xóa" class="delete"><i class="fa fa-trash" aria-hidden="true"></i></a></li>
+                                    <li><a href="{{route('delete.product',$product->id)}}" onclick="return confirm('bạn muốn xóa sản phẩm này?')" title="Xóa" class="delete"><i class="fa fa-trash" aria-hidden="true"></i></a></li>
                                 </ul>
                             </td>
                             <td><span class="tbody-text">{{number_format($product->price,0,',','.')}}đ</span></td>
@@ -66,11 +72,11 @@
                             @if($brand->id ==$product->brand_id)
                             <td><span class="tbody-text">{{$brand->name}}</span></td>
                             @endif
-                            @endforeach                          
-                           
+                            @endforeach
+
                             <td><span class="tbody-text" style="color: #4FA327;">{{$product->stock}} Cái</span></td>
-                            
-                           
+
+
                             @foreach($users as $user)
                             @if($user->id == $product->user_id)
                             <td><span class="tbody-text">{{$user->username}}</span></td>
@@ -83,17 +89,17 @@
                         @endforeach
                         </tfoot>
                 </table>
-               
+
             </div>
         </div>
     </div>
-</br>
+    </br>
     <div class="section" id="paging-wp">
         <div class="section-detail clearfix">
-        <ul id="list-paging" class="fl-right">
-        {{ $products->links() }}
-        </ul>
-       
+            <ul id="list-paging" class="fl-right">
+                {{ $products->links() }}
+            </ul>
+
         </div>
     </div>
 </div>

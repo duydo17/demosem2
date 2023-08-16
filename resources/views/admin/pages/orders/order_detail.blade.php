@@ -17,15 +17,45 @@
             </li>
             <li>
                 <h3 class="title">Thông tin vận chuyển</h3>
-                <span class="detail">{{$orders->payment}}</span>
+                <span class="detail">{{$orders->payment}}, SĐT: {{$orders->customer->phone}}</span>
             </li>
-            <form method="POST" action="">
+            @if(!empty($shipper))
+            @if(!empty($shipper->thumbnail))
+            <li>
+                <h3 class="title">Hình Ảnh Giao Hàng</h3>
+               <img src="{{asset('shipper/'.$shipper->thumbnail)}}" alt="" width="150px">
+            </li>
+            @endif
+            
+            @if($order->id == $shipper->order_id)
+            @if(!empty($shipper->note))
+            <li>
+                <h3 class="title">Lý Do Khách Hủy</h3>
+                <span class="detail">{{$shipper->note}}</span>
+            </li>
+            @endif
+            @endif
+            
+            @foreach($users as $user)
+            @if($shipper->user_id == $user->id)
+            <li>
+                <h3 class="title">Nhân Viên Giao Hàng</h3>
+                <span class="detail">{{$user->fullname  }}</span>
+            </li>
+            @endif
+
+            @endforeach
+            @endif
+            <form method="POST" action="{{route('edit.status.order', $orders->id)}}">
+            @csrf
                 <li>
                     <h3 class="title">Tình trạng đơn hàng</h3>
                     <select name="status">
-                        <option value='payment'>Đang Xử Lý</option>
-                        <option selected='selected' value='payment'>Đang Xử Lý</option>
-                        <option value='2'>Thành công</option>
+                     <option value="đang đóng gói" {{old('status',$orders->status)== 'đang đóng gói' ? 'selected' : ''}}>Đang Đóng Gói</option>                       
+                     <option value="đang vận chuyển" {{old('status',$orders->status)== 'đang vận chuyển' ? 'selected' : ''}}>Đang Vận Chuyển</option>                       
+                     <option value="đang giao hàng" {{old('status',$orders->status)== 'đang giao hàng' ? 'selected' : ''}}>Đang Giao Hàng</option>      
+                     <option value="hủy đơn hàng" {{old('status',$orders->status)== 'hủy đơn hàng' ? 'selected' : ''}}>Hủy Đơn Hàng</option>                   
+                     <option value="giao thành công" {{old('status',$orders->status)== 'giao thành công' ? 'selected' : ''}}>Giao Hàng Thành Công</option>                                                
                     </select>
                     <input type="submit" name="sm_status" value="Cập nhật đơn hàng">
                 </li>

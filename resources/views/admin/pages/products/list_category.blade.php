@@ -10,6 +10,12 @@
 
     <div class="section" id="detail-page">
         <div class="section-detail">
+        <div class="filter-wp clearfix">
+                <form action="#" class="form-s fl-right">
+                    <input type="text" name="keyword" id="keyword" value="{{request()->input('keyword')}}">
+                    <input type="submit" name="btn_search" value="Tìm kiếm">
+                </form>
+            </div>
             <div class="table-responsive">
                 @if (session('success'))
                 <div class="alert alert-success">

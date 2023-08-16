@@ -14,4 +14,8 @@ class product extends Model
     function product_thumbnail(){
         return $this->hasMany(Product_thumbnail::class,'product_id');
     }
+    public function order_detail()
+    {
+        return $this->hasMany(Orderdetail::class);
+    }
 }

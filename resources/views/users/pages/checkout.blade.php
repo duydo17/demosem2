@@ -26,14 +26,14 @@
                     <div class="form-row clearfix">
                         <div class="form-col fl-left">
                             <label for="fullname">Họ tên</label>
-                            <input type="text" name="fullname" id="fullname">
+                            <input type="text" name="fullname" value="{{$user->fullname}}" id="fullname" disabled>
                             @error('fullname')
                 <span class="text-danger">{{ $message }}</span>
                 @enderror
                         </div>
                         <div class="form-col fl-right">
                             <label for="email">Email</label>
-                            <input type="email" name="email" id="email">
+                            <input type="email" name="email" value="{{$user->email}}" disabled id="email">
                             @error('email')
                 <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -42,14 +42,14 @@
                     <div class="form-row clearfix">
                         <div class="form-col fl-left">
                             <label for="address">Địa chỉ</label>
-                            <input type="text" name="address" id="address">
+                            <input type="text" value="{{$user->address}}" name="address" id="address">
                             @error('address')
                 <span class="text-danger">{{ $message }}</span>
                 @enderror
                         </div>
                         <div class="form-col fl-right">
                             <label for="phone">Số điện thoại</label>
-                            <input type="tel" name="phone" id="phone">
+                            <input type="tel" name="phone" value="{{$user->phone}}" id="phone">
                             @error('phone')
                 <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -101,6 +101,9 @@
                             <input type="radio" id="payment-home" name="payment-method" value="Thanh Toán Tại Nhà">
                             <label for="payment-home">Thanh toán tại nhà</label>
                         </li>
+                        @error('payment-method')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
                     </ul>
                 </div>
                 <div class="place-order-wp clearfix">
@@ -112,3 +115,17 @@
     </div>
 </div>
 @stop
+<style>
+    .title{
+        color: blue;
+    }
+    .fa-trash{
+        color: red;
+    }
+    .fa-pencil{
+        color: blue;
+    }
+    .cancelbtn{
+        border-radius: 30px;
+    }
+</style>

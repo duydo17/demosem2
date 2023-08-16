@@ -1,4 +1,5 @@
 @extends('users.layouts.layout')
+
 @section('content')
 <div id="main-content-wp" class="clearfix category-product-page">
     <div class="wp-inner">
@@ -17,59 +18,61 @@
         <div class="main-content fl-right">
             <div class="section" id="list-product-wp">
                 <div class="section-head clearfix">
-                    
-                    <h3 class="section-title fl-left">Laptop</h3>
                     <div class="filter-wp fl-right">
-                        <p class="desc">Hiển thị 45 trên 50 sản phẩm</p>
+
                         <div class="form-filter">
-                            <form method="POST" action="">
-                                <select name="select">
-                                    <option value="0">Sắp xếp</option>
+                            <form action="">
+                            <select name="search_cate" value="{{request()->input('search_cate')}}" style="border-radius: 10px;">
+                                @foreach($categories as $cate)
+                                    <option value="{{$cate->id}}">{{$cate->name}}</option>
+                                 @endforeach
+                                   
+                                </select>
+                                <select name="select" value="{{request()->input('select')}}" style="border-radius: 10px;">
+                                    <option value="0" >Sắp xếp</option>
                                     <option value="1">Từ A-Z</option>
                                     <option value="2">Từ Z-A</option>
                                     <option value="3">Giá cao xuống thấp</option>
-                                    <option value="3">Giá thấp lên cao</option>
+                                    <option value="4">Giá thấp lên cao</option>
                                 </select>
-                                <button type="submit">Lọc</button>
+                                <button type="submit" style="border-radius: 30px; background-color: #333333; margin-left: 5px;">Sắp Xếp</button>
                             </form>
                         </div>
                     </div>
                 </div>
+              
                 <div class="section-detail">
                     <ul class="list-item clearfix">
                         @foreach($products as $product)
+                       
+                        <form action="{{route('add.cart',$product->id)}}" method="post">
+                @csrf
                         <li>
                             <a href="{{route('product.detail', $product->id)}}" title="" class="thumb">
                                 <img src="{{asset($product->product_thumbnail[0]->image)}}" style="width: 190px; height: 150px;">
                             </a>
-                            <a href="{{route('product.detail', $product->id)}}" title="" class="product-name">{{$product->name}}</a>
+                            <a href="{{route('product.detail', $product->id)}}" title="" style="min-height: 50px;" class="product-name">{{$product->name}}</a>
                             <div class="price">
-                                <span class="new">{{number_format($product->price,0,',','.')}}đ</span>
-                                
+                                <span class="new">Giá: {{number_format($product->price,0,',','.')}}đ</span>
+
                             </div>
                             @if($product->stock > 0)
-                            <div class="action clearfix">
-                                <a style="margin-left: 37px;" href="{{route('add.cart',$product->id)}}" title="Thêm giỏ hàng" class="add-cart fl-left">Thêm giỏ hàng</a>
-                             
+                            <div class="action clearfix" style="border-radius: 10px;">
+                              
+                                <button  style="margin-left: 37px; border-radius: 10px;" class="add-cart">Thêm giỏ hàng</button>
                             </div>
                             @endif
                         </li>
-                       @endforeach
+                        </form>
+                        @endforeach
                     </ul>
                 </div>
+               
             </div>
             <div class="section" id="paging-wp">
                 <div class="section-detail">
                     <ul class="list-item clearfix">
-                        <li>
-                            <a href="" title="">1</a>
-                        </li>
-                        <li>
-                            <a href="" title="">2</a>
-                        </li>
-                        <li>
-                            <a href="" title="">3</a>
-                        </li>
+                        {{$products->links()}}
                     </ul>
                 </div>
             </div>
@@ -92,7 +95,7 @@
         }
         ?>
         <div class="sidebar fl-left">
-        <div class="section" id="category-product-wp">
+            <div class="section" id="category-product-wp">
                 <div class="section-head">
                     <h3 class="section-title">Danh mục sản phẩm</h3>
                 </div>
@@ -112,55 +115,61 @@
                                 @endforeach
                             </ul>
                             @endif
-
                         </li>
 
                         @endforeach
                     </ul>
                 </div>
             </div>
-            <div class="section" id="filter-product-wp">
-                <div class="section-head">
-                    <h3 class="section-title">Bộ lọc</h3>
+            <div class=" section" id="filter-product-wp">
+                                        <div class="section-head">
+                                            <h3 class="section-title">Bộ lọc</h3>
+                                        </div>
+                                        <div class="section-detail">
+                                            <form  action="">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <td colspan="2">Giá</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><input  id="loc-500" type="radio" value="1"  name="search_price"  {{ request()->input('search_price') === '1' ? 'checked' : '' }}></td>
+                                                            <td><label for="loc-500"  class="loc-500">Dưới 500.000đ</label></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="radio" value="2" name="search_price" {{ request()->input('search_price') === '2' ? 'checked' : '' }}></td>
+                                                            <td>500.000đ - 1.000.000đ</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="radio" value="3" name="search_price" {{ request()->input('search_price') === '3' ? 'checked' : '' }}></td>
+                                                            <td>1.000.000đ - 5.000.000đ</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="radio" value="4" name="search_price" {{ request()->input('search_price') === '4' ? 'checked' : '' }}></td>
+                                                            <td>5.000.000đ - 10.000.000đ</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><input type="radio" value="5" name="search_price" {{ request()->input('search_price') === '5' ? 'checked' : '' }}></td>
+                                                            <td>Trên 10.000.000đ</td>
+                                                        </tr>
+
+                                                    </tbody>
+
+                                                </table>
+                                                <button type="submit" style="width: 100px; border: none; color: white;  border-radius: 20px; background-color:#333333;">Lọc</button>
+
+                                            </form>
+                                        </div>
                 </div>
-                <div class="section-detail">
-                    <form method="POST" action="">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <td colspan="2">Giá</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input type="radio" name="r-price"></td>
-                                    <td>Dưới 500.000đ</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="radio" name="r-price"></td>
-                                    <td>500.000đ - 1.000.000đ</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="radio" name="r-price"></td>
-                                    <td>1.000.000đ - 5.000.000đ</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="radio" name="r-price"></td>
-                                    <td>5.000.000đ - 10.000.000đ</td>
-                                </tr>
-                                <tr>
-                                    <td><input type="radio" name="r-price"></td>
-                                    <td>Trên 10.000.000đ</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        
-                       
-                    </form>
-                </div>
+
             </div>
-            
         </div>
     </div>
-</div>
-@stop
+    @stop
+  <style>
+    .loc-500:hover{
+        cursor: pointer;
+    }
+  </style>

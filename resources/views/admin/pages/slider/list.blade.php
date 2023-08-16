@@ -1,4 +1,4 @@
-@extends('admin.layouts.layout');
+@extends('admin.layouts.layout')
 @section('content')
 <div id="content" class="fl-right">
     <div class="section" id="title-page">
@@ -11,9 +11,9 @@
         <div class="section-detail">
             <div class="filter-wp clearfix">
 
-                <form method="GET" class="form-s fl-right">
-                    <input type="text" name="s" id="s">
-                    <input type="submit" name="sm_s" value="Tìm kiếm">
+            <form action="#" class="form-s fl-right">
+                    <input type="text" name="keyword" id="keyword" value="{{request()->input('keyword')}}">
+                    <input type="submit" name="btn_search" value="Tìm kiếm">
                 </form>
             </div>
 
@@ -51,7 +51,7 @@
                                     <a href="" title="">{{$slider->name}}</a>
                                 </div>
                                 <ul class="list-operation fl-right">
-                                    <li><a href="" title="Sửa" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                 
                                     <li><a href="{{route('delete.slider',$slider->id)}}" title="Xóa" onclick="return confirm('bạn muốn xóa slider này?')" class="delete"><i class="fa fa-trash" aria-hidden="true"></i></a></li>
                                 </ul>
                             </td>
@@ -72,7 +72,7 @@
     </div>
     <div class="section" id="paging-wp">
         <div class="section-detail clearfix">
-            <p id="desc" class="fl-left">Chọn vào checkbox để lựa chọn tất cả</p>
+          
             <ul id="list-paging" class="fl-right">
                 {{ $sliders->links() }}
             </ul>

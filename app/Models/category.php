@@ -14,7 +14,7 @@ class category extends Model
         
     ];
     public function users(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Member::class);
     }
     public function brands()
     {

@@ -4,7 +4,12 @@
     label {
         width: 100px;
         font-weight: bold;
+    } 
+.text-danger{
+        color: red;
     }
+
+    
 </style>
 @section('content')
 <div id="content" class="fl-right">

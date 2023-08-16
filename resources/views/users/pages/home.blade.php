@@ -4,6 +4,19 @@
 <div id="main-content-wp" class="home-page clearfix">
     <div class="wp-inner">
         <div class="main-content fl-right">
+            @if (session('success'))
+            <div class="alert alert-success alert-dismissible"">
+                <button type=" button" class="btn-close" data-bs-dismiss="alert"></button>
+                <strong>Thành Công!</strong> {{session('success')}}
+            </div>
+            @endif
+           
+            @if (session('error'))
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <strong>Lỗi!</strong>{{session('error')}}
+            </div>
+            @endif
             <div class="section" id="slider-wp">
                 <div class="section-detail">
                     @foreach($sliders as $slider)
@@ -13,6 +26,7 @@
                     @endforeach
                 </div>
             </div>
+
 
             <div class="section" id="support-wp">
                 <div class="section-detail">
@@ -62,22 +76,24 @@
                 <div class="section-detail">
                     <ul class="list-item">
                         @foreach($newproducts as $new)
-                        <li>
-                            <a href="{{route('product.detail', $new->id)}}" title="" class="thumb">
-                                <img src="{{asset($new->product_thumbnail[0]->image)}}" style="width: 190px; height: 150px;">
-                            </a>
-                            <a href="{{route('product.detail', $new->id)}}" title="" class="product-name">{{$new->name}}</a>
-                            <div class="price">
-                                <span class="new">{{number_format($new->price,0,',','.')}}đ</span>
+                        <form action="{{route('add.cart',$new->id)}}" method="post">
+                            @csrf
+                            <li>
+                                <a href="{{route('product.detail', $new->id)}}" title="" class="thumb">
+                                    <img src="{{asset($new->product_thumbnail[0]->image)}}" style="width: 190px; height: 150px;">
+                                </a>
+                                <a href="{{route('product.detail', $new->id)}}" title="" style="min-height: 50px;" class="product-name">{{$new->name}}</a>
+                                <div class="price">
+                                    <span class="new">Giá: {{number_format($new->price,0,',','.')}}đ</span>
 
-                            </div>
-                            @if($new->stock > 0 )
-                            <div class="action clearfix">
-                                <a style="margin-left: 37px;" href="{{route('add.cart',$new->id)}}" title="" class="add-cart fl-left">Thêm giỏ hàng</a>
-
-                            </div>
-                            @endif
-                        </li>
+                                </div>
+                                @if($new->stock > 0 )
+                                <div class="action clearfix">
+                                    <button style="margin-left: 37px; border-radius: 10px;" class="add-cart">Thêm giỏ hàng</button>
+                                </div>
+                                @endif
+                            </li>
+                        </form>
                         @endforeach
                     </ul>
                 </div>
@@ -91,23 +107,29 @@
                 <div class="section-detail">
                     <ul class="list-item clearfix">
                         @foreach($products as $product)
-                        @if($cate->id == $product->category_id)
-                        <li>
-                            <a href="{{route('product.detail', $product->id)}}" title="" class="thumb">
-                                <img src="{{asset($product->product_thumbnail[0]->image)}}" style="width: 190px; height: 150px;">
-                            </a>
-                            <a href="{{route('product.detail', $product->id)}}" title="" class="product-name">{{$product->name}}</a>
-                            <div class="price">
-                                <span class="new">{{number_format($product->price,0,',','.')}}đ</span>
-                            </div>
-                            @if($product->stock > 0)
-                            <div class="action clearfix">
-                                <a style="margin-left: 37px;" href="{{route('add.cart',$product->id)}}" title="Thêm giỏ hàng" class="add-cart fl-left">Thêm giỏ hàng</a>
+                        <form action="{{route('add.cart',$product->id)}}" method="post">
+                            @csrf
+                            @if($cate->id == $product->category_id)
 
-                            </div>
+                            <li>
+                                <a href="{{route('product.detail', $product->id)}}" title="" class="thumb">
+                                    <img src="{{asset($product->product_thumbnail[0]->image)}}" style="width: 190px; height: 150px;">
+                                </a>
+                                <a href="{{route('product.detail', $product->id)}}" title="" style="min-height: 50px;" class="product-name">{{$product->name}}</a>
+                                <div class="price">
+                                    <span class="new">Giá: {{number_format($product->price,0,',','.')}}đ</span>
+                                </div>
+                                @if($product->stock > 0)
+                                <div class="action clearfix">
+                                    <button style="margin-left: 37px; border-radius: 10px;" class="add-cart">Thêm giỏ hàng</button>
+                                </div>
+                                @endif
+
+                            </li>
+
                             @endif
-                            @endif
-                            @endforeach
+                        </form>
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -157,111 +179,34 @@
                                             <h3 class="section-title">Sản phẩm bán chạy</h3>
                                         </div>
                                         <div class="section-detail">
-                                            <ul class="list-item">
-                                                <li class="clearfix">
-                                                    <a href="?page=detail_product" title="" class="thumb fl-left">
-                                                        <img src="public/images/img-pro-13.png" alt="">
-                                                    </a>
-                                                    <div class="info fl-right">
-                                                        <a href="?page=detail_product" title="" class="product-name">Laptop Asus A540UP I5</a>
-                                                        <div class="price">
-                                                            <span class="new">5.190.000đ</span>
-                                                            <span class="old">7.190.000đ</span>
+                                            <ul class="list-item clearfix">
+                                                @foreach($bestSellingProducts as $best)
+                                                @foreach($products as $product)
+                                                @if($best->product_id == $product->id)
+                                                <form action="{{route('add.cart',$product->id)}}" method="post" style="margin-top: 10px;">
+                                                    @csrf
+                                                    <li class="clearfix">
+                                                        <a href="{{route('product.detail', $product->id)}}" title="" class="thumb fl-left">
+                                                            <img src="{{asset($product->product_thumbnail[0]->image)}}" alt="">
+                                                        </a>
+                                                        <div class="info fl-right">
+                                                            <a href="{{route('product.detail', $product->id)}}" title="" class="product-name">{{$product->name}}</a>
+                                                            <div class="price">
+                                                                <span class="new">Giá: {{number_format($product->price,0,',','.')}}đ</span>
+
+                                                            </div>
+                                                            @if($product->stock > 0)
+                                                            <div class="action clearfix">
+                                                                <button style="margin-left: 20px; border: none; border-radius: 10px;" class="add-cart">Thêm giỏ hàng</button>
+                                                            </div>
+                                                            @endif
                                                         </div>
-                                                        <a href="" title="" class="buy-now">Mua ngay</a>
-                                                    </div>
-                                                </li>
-                                                <li class="clearfix">
-                                                    <a href="?page=detail_product" title="" class="thumb fl-left">
-                                                        <img src="public/images/img-pro-11.png" alt="">
-                                                    </a>
-                                                    <div class="info fl-right">
-                                                        <a href="?page=detail_product" title="" class="product-name">Iphone X Plus</a>
-                                                        <div class="price">
-                                                            <span class="new">15.190.000đ</span>
-                                                            <span class="old">17.190.000đ</span>
-                                                        </div>
-                                                        <a href="" title="" class="buy-now">Mua ngay</a>
-                                                    </div>
-                                                </li>
-                                                <li class="clearfix">
-                                                    <a href="?page=detail_product" title="" class="thumb fl-left">
-                                                        <img src="public/images/img-pro-12.png" alt="">
-                                                    </a>
-                                                    <div class="info fl-right">
-                                                        <a href="?page=detail_product" title="" class="product-name">Iphone X Plus</a>
-                                                        <div class="price">
-                                                            <span class="new">15.190.000đ</span>
-                                                            <span class="old">17.190.000đ</span>
-                                                        </div>
-                                                        <a href="" title="" class="buy-now">Mua ngay</a>
-                                                    </div>
-                                                </li>
-                                                <li class="clearfix">
-                                                    <a href="?page=detail_product" title="" class="thumb fl-left">
-                                                        <img src="public/images/img-pro-05.png" alt="">
-                                                    </a>
-                                                    <div class="info fl-right">
-                                                        <a href="?page=detail_product" title="" class="product-name">Iphone X Plus</a>
-                                                        <div class="price">
-                                                            <span class="new">15.190.000đ</span>
-                                                            <span class="old">17.190.000đ</span>
-                                                        </div>
-                                                        <a href="" title="" class="buy-now">Mua ngay</a>
-                                                    </div>
-                                                </li>
-                                                <li class="clearfix">
-                                                    <a href="?page=detail_product" title="" class="thumb fl-left">
-                                                        <img src="public/images/img-pro-22.png" alt="">
-                                                    </a>
-                                                    <div class="info fl-right">
-                                                        <a href="?page=detail_product" title="" class="product-name">Iphone X Plus</a>
-                                                        <div class="price">
-                                                            <span class="new">15.190.000đ</span>
-                                                            <span class="old">17.190.000đ</span>
-                                                        </div>
-                                                        <a href="" title="" class="buy-now">Mua ngay</a>
-                                                    </div>
-                                                </li>
-                                                <li class="clearfix">
-                                                    <a href="?page=detail_product" title="" class="thumb fl-left">
-                                                        <img src="public/images/img-pro-23.png" alt="">
-                                                    </a>
-                                                    <div class="info fl-right">
-                                                        <a href="?page=detail_product" title="" class="product-name">Iphone X Plus</a>
-                                                        <div class="price">
-                                                            <span class="new">15.190.000đ</span>
-                                                            <span class="old">17.190.000đ</span>
-                                                        </div>
-                                                        <a href="" title="" class="buy-now">Mua ngay</a>
-                                                    </div>
-                                                </li>
-                                                <li class="clearfix">
-                                                    <a href="?page=detail_product" title="" class="thumb fl-left">
-                                                        <img src="public/images/img-pro-18.png" alt="">
-                                                    </a>
-                                                    <div class="info fl-right">
-                                                        <a href="?page=detail_product" title="" class="product-name">Iphone X Plus</a>
-                                                        <div class="price">
-                                                            <span class="new">15.190.000đ</span>
-                                                            <span class="old">17.190.000đ</span>
-                                                        </div>
-                                                        <a href="" title="" class="buy-now">Mua ngay</a>
-                                                    </div>
-                                                </li>
-                                                <li class="clearfix">
-                                                    <a href="?page=detail_product" title="" class="thumb fl-left">
-                                                        <img src="public/images/img-pro-15.png" alt="">
-                                                    </a>
-                                                    <div class="info fl-right">
-                                                        <a href="?page=detail_product" title="" class="product-name">Iphone X Plus</a>
-                                                        <div class="price">
-                                                            <span class="new">15.190.000đ</span>
-                                                            <span class="old">17.190.000đ</span>
-                                                        </div>
-                                                        <a href="" title="" class="buy-now">Mua ngay</a>
-                                                    </div>
-                                                </li>
+
+                                                    </li>
+                                                </form>
+                                                @endif
+                                                @endforeach
+                                                @endforeach
                                             </ul>
                                         </div>
                 </div>
