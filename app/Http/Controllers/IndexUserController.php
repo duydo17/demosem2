@@ -44,61 +44,78 @@ class IndexUserController extends Controller
         return view('users.pages.home', compact('sliders', 'categories', 'products', 'newproducts', 'brands', 'cate_brands', 'product_thumbnail', 'bestSellingProducts'));
     }
     function product(Request $request)
-    {
-        $cate_id = $request->query('cate');
-        $brand_id = $request->query('brand');
-        $select = $request->input('select');
-        $search = $request->input('search');
-      
-        $search_cate = "";
-        if( $request->has('search_cate')){
-            $search_cate = $request->input('search_cate');
+{
+    $cate_id = $request->query('cate');
+    $brand_id = $request->query('brand');
+    $select = $request->input('select');
+    $search = $request->input('search');
+    $search_cate = $request->input('search_cate');
+    $search_price = $request->input('search_price');
+    
+    $products = Product::paginate(12); // Mặc định
+
+    if ($request->has('cate') && $request->has('brand')) {
+        $products = Product::where('category_id', $cate_id)
+            ->where('brand_id', $brand_id)
+            ->paginate(12);
+    } elseif ($request->has('cate')) {
+        $products = Product::where('category_id', $cate_id)->paginate(12);
+    } elseif ($search_cate) {
+        $query = Product::where('category_id', $search_cate);
+
+        if ($select == 1) {
+            $query->orderBy('name', 'desc');
+        } elseif ($select == 2) {
+            $query->orderBy('name', 'asc');
+        } elseif ($select == 3) {
+            $query->orderBy('price', 'desc');
+        } elseif ($select == 4) {
+            $query->orderBy('price', 'asc');
         }
 
-        $search_price = $request->input('search_price');
-        if ($request->has('cate') && $request->has('brand')) {
-            $products = Product::where('category_id', $cate_id)
-                ->where('brand_id', $brand_id)
-                ->paginate(12);
-        } else if ($request->has('cate')) {
-            $products = Product::where('category_id', $cate_id)->paginate(12);
-        } else if ($select == 1) {
-            $products = Product::orderBy('name', 'desc')->paginate(12);
-        } else if ($select == 2) {
-            $products = Product::orderBy('name', 'asc')->paginate(12);
-        } else if ($select == 3) {
-            $products = Product::orderBy('price', 'desc')->paginate(12);
-        } else if ($select == 4) {
-            $products = Product::orderBy('price', 'asc')->paginate(12);
-        } 
-       
-        else if ($search_price == 1) {
-            $products = Product::where('price', '<', 500000)->paginate(12);
-        } else if ($search_price == 2) {
-            $products = Product::where('price', '>=', 500000)
-                ->where('price', '<=', 1000000)
-                ->paginate(12);
-        } else if ($search_price == 3) {
-            $products = Product::where('price', '>', 1000000)
-                ->where('price', '<=', 5000000)
-                ->paginate(12);
-        } else if ($search_price == 4) {
-            $products = Product::where('price', '>', 5000000)
-                ->where('price', '<=', 10000000)
-                ->paginate(12);
-        } else if ($search_price == 5) {
-            $products = Product::where('price', '>', 10000000)->paginate(12);
-        } else if ($search) {
-            $products = Product::where('name', 'Like', "%{$search}%")->paginate(12);
-        } else {
-            $products = Product::paginate(12);
+        $products = $query->paginate(12);
+    } elseif (!$search_cate) {
+        $query = Product::query();
+
+        if ($select == 1) {
+            $query->orderBy('name', 'desc');
+        } elseif ($select == 2) {
+            $query->orderBy('name', 'asc');
+        } elseif ($select == 3) {
+            $query->orderBy('price', 'desc');
+        } elseif ($select == 4) {
+            $query->orderBy('price', 'asc');
         }
 
-        $brands = Brand::all();
-        $cate_brands = Cate_brand::all();
-        $categories = Category::all();
-        return view('users.pages.product', compact('products', 'categories', 'brands', 'cate_brands'));
+        $products = $query->paginate(12);
+    } elseif ($search_price) {
+        $query = Product::query();
+
+        if ($search_price == 1) {
+            $query->where('price', '<', 500000);
+        } elseif ($search_price == 2) {
+            $query->where('price', '>=', 500000)
+                ->where('price', '<=', 1000000);
+        } elseif ($search_price == 3) {
+            $query->where('price', '>', 1000000)
+                ->where('price', '<=', 5000000);
+        } elseif ($search_price == 4) {
+            $query->where('price', '>', 5000000)
+                ->where('price', '<=', 10000000);
+        } elseif ($search_price == 5) {
+            $query->where('price', '>', 10000000);
+        } elseif ($search) {
+            $query->where('name', 'LIKE', "%{$search}%");
+        }
+
+        $products = $query->paginate(12);
     }
+
+    $brands = Brand::all();
+    $cate_brands = Cate_brand::all();
+    $categories = Category::all();
+    return view('users.pages.product', compact('products', 'categories', 'brands', 'cate_brands'));
+}
 
     function product_detail($id)
     {
@@ -247,5 +264,14 @@ class IndexUserController extends Controller
         }
        
             return redirect()->back()->with('error', 'đơn hàng đang giao hoặc đã giao thành công không được hủy');
+    }
+    function contact(){
+        $bestSellingProducts = Orderdetail::select('product_id', DB::raw('SUM(quantity) as total_quantity'))
+            ->groupBy('product_id')
+            ->orderByDesc('total_quantity')
+            ->limit(6)
+            ->get();
+            $products = Product::all();
+        return view('users.pages.contact',compact('bestSellingProducts','products'));
     }
 }

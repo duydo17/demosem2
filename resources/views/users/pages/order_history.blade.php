@@ -92,9 +92,7 @@
                             @if($order->status == "hủy đơn hàng")
                             <td> <span class="badge badge-danger" style="width: 130px;">{{$order->status}}</span></td>
                             @endif
-                            @if($order->status == "đang giao hàng")
-                            <td ><span class="badge badge-primary" style="width: 130px;">{{$order->status}}</span></td>
-                            @endif
+                          
                             @if($order->status == "giao thành công")
                             <td><span class="badge badge-success" style="width: 130px;">{{$order->status}}</span></td>
                             @endif

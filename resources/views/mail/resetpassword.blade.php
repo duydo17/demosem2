@@ -10,8 +10,8 @@
     $token = session('tokenreset');
 @endphp
     <h1>Quên Mật Khẩu</h1>
-    <h3>Mật khẩu mới của bạn là: {{$token}}</h3>
-    <h3>Đăng Nhập Tài Khoản Để Đổi Mật Khẩu</h3>
+    <h3>Mã OTP của bạn là: {{$token}}</h3>
+    
 
 </body>
 </html>

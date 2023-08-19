@@ -1,4 +1,6 @@
 @extends('users.layouts.layout')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 @section('content')
 <div id="main-content-wp" class="clearfix blog-page">
     <div class="wp-inner">
@@ -24,15 +26,15 @@
         
         <ul class="list-item">
             <li>
-                <h5 class="title">**Mã đơn hàng**</h5>
+            <h5><i class='fas fa-barcode icon' style="color:#00BFFF"></i> Mã Đơn Hàng</h5>
                 <span class="detail">{{$order->order_code}}</span>
             </li>
             <li>
-                <h5 class="title">**Địa chỉ nhận hàng**</h5>
+            <h5><i class="fa fa-address-card icon" style="color:#FF0000"></i> Địa Chỉ Nhận Hàng</h5>
                 <span class="detail">{{$order->customer->address}}</span>
             </li>
             <li>
-                <h5 class="title">**Hình Thức Thanh Toán**</h5>
+            <h5><i class="fa fa-cc-visa icon" style="color: blue;"></i> Hình Thức Thanh Toán</h5>
                 <span class="detail">{{$order->payment}}</span>
             </li>
             <form method="POST" action="">
@@ -97,12 +99,12 @@
         <div class="section-detail">
             <ul class="list-item clearfix">
                 <li>
-                    <span style="margin-right: 20px;" class="total-fee">Tổng số lượng</span>
-                    <span style="color: red;"class="total">Tổng đơn hàng</span>
+                    <span style="margin-right: 20px;" class="total-fee"><i class="fas fa-shopping-bag icon" style="color: #00BFFF;"></i>Tổng số lượng</span>
+                    <span class="total" ><i class="fas fa-coins icon" style="color: red;"></i>Tổng đơn hàng</span>
                 </li>
                 <li>
-                    <span style="margin-right: 40px;" class="total-fee">{{$orders->product_qty}} sản phẩm</span>
-                    <span style="color: red;" class="total">{{$orders->cart_total}} đ</span>
+                    <span style="margin-right: 40px; margin-left: 10px;" class="total-fee">{{$orders->product_qty}} sản phẩm</span>
+                    <span style="color: red; margin-left: 10px;" class="total">{{$orders->cart_total}} đ</span>
                 </li>
             </ul>
         </div>

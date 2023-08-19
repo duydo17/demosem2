@@ -25,6 +25,8 @@ Route::get('/logout',[AdminUsersController::class,'logout'])->name('logout');
 Route::get('/forgotpassword',[AdminUsersController::class,'forgotpassword'])->name('forgotpassword');
 Route::post('/signup',[AdminUsersController::class,'signup'])->name('signup');
 Route::post('/forgotpassword/email',[AdminUsersController::class,'forgot'])->name('email.forgotpassword');
+Route::post('/checktoken',[AdminUsersController::class,'checktoken'])->name('email.checktoken');
+Route::post('/reset/{id}',[AdminUsersController::class,'resetpassword'])->name('resetpassword');
 
 //Login Admin
 Route::post('/login',[AdminUsersController::class,'login'])->name('login.user');
@@ -89,6 +91,7 @@ Route::get('/blog',[IndexUserController::class,'blog'])->name('blog');
 Route::get('/blog/detail/{id}',[IndexUserController::class,'blog_detail'])->name('blog.detail');
 Route::get('/',[IndexUserController::class,'home'])->name('home');
 Route::get('/product',[IndexUserController::class,'product'])->name('product');
+Route::get('/contact',[IndexUserController::class,'contact'])->name('contact');
 
 Route::get('/product/detail/{id}',[IndexUserController::class,'product_detail'])->name('product.detail');
 Route::post('/product/detail/comment/{id}',[IndexUserController::class,'add_comment'])->name('add.comment');

@@ -23,13 +23,14 @@
                         <div class="form-filter">
                             <form action="">
                             <select name="search_cate" value="{{request()->input('search_cate')}}" style="border-radius: 10px;">
-                                @foreach($categories as $cate)
+                            <option value="">Chọn Danh Mục</option>
+                            @foreach($categories as $cate)                                  
                                     <option value="{{$cate->id}}">{{$cate->name}}</option>
                                  @endforeach
                                    
                                 </select>
                                 <select name="select" value="{{request()->input('select')}}" style="border-radius: 10px;">
-                                    <option value="0" >Sắp xếp</option>
+                                    <option value="" >Sắp xếp</option>
                                     <option value="1">Từ A-Z</option>
                                     <option value="2">Từ Z-A</option>
                                     <option value="3">Giá cao xuống thấp</option>
@@ -136,23 +137,23 @@
                                                     <tbody>
                                                         <tr>
                                                             <td><input  id="loc-500" type="radio" value="1"  name="search_price"  {{ request()->input('search_price') === '1' ? 'checked' : '' }}></td>
-                                                            <td><label for="loc-500"  class="loc-500">Dưới 500.000đ</label></td>
+                                                            <td><label for="loc-500"  class="loc loc-500">Dưới 500.000đ</label></td>
                                                         </tr>
                                                         <tr>
-                                                            <td><input type="radio" value="2" name="search_price" {{ request()->input('search_price') === '2' ? 'checked' : '' }}></td>
-                                                            <td>500.000đ - 1.000.000đ</td>
+                                                            <td><input type="radio" id="loc-2" value="2" name="search_price" {{ request()->input('search_price') === '2' ? 'checked' : '' }}></td>
+                                                            <td> <label for="loc-2"  class="loc loc-2">500.000đ - 1.000.000đ</label></td>
                                                         </tr>
                                                         <tr>
-                                                            <td><input type="radio" value="3" name="search_price" {{ request()->input('search_price') === '3' ? 'checked' : '' }}></td>
-                                                            <td>1.000.000đ - 5.000.000đ</td>
+                                                            <td><input type="radio" id="loc-3" value="3" name="search_price" {{ request()->input('search_price') === '3' ? 'checked' : '' }}></td>
+                                                            <td><label for="loc-3"  class="loc loc-3">1.000.000đ - 5.000.000đ</label></td>
                                                         </tr>
                                                         <tr>
-                                                            <td><input type="radio" value="4" name="search_price" {{ request()->input('search_price') === '4' ? 'checked' : '' }}></td>
-                                                            <td>5.000.000đ - 10.000.000đ</td>
+                                                            <td><input type="radio" id="loc-4" value="4" name="search_price" {{ request()->input('search_price') === '4' ? 'checked' : '' }}></td>
+                                                            <td><label for="loc-4"  class="loc loc-4"> 5.000.000đ - 10.000.000đ</label></td>
                                                         </tr>
                                                         <tr>
-                                                            <td><input type="radio" value="5" name="search_price" {{ request()->input('search_price') === '5' ? 'checked' : '' }}></td>
-                                                            <td>Trên 10.000.000đ</td>
+                                                            <td><input type="radio" id="loc-5" value="5" name="search_price" {{ request()->input('search_price') === '5' ? 'checked' : '' }}></td>
+                                                            <td><label for="loc-5"  class="loc loc-5">Trên 10.000.000đ</label></td>
                                                         </tr>
 
                                                     </tbody>
@@ -169,7 +170,7 @@
     </div>
     @stop
   <style>
-    .loc-500:hover{
+    .loc:hover{
         cursor: pointer;
     }
   </style>

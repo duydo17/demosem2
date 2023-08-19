@@ -86,7 +86,7 @@
                                 </li>
                                 @endif
                                 <li>
-                                    <a href="?page=contact" title="">Liên hệ</a>
+                                    <a href="{{route('contact')}}" title="">Liên hệ</a>
                                 </li>
                             </ul>
                         </div>

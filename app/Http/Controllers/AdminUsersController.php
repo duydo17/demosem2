@@ -39,23 +39,65 @@ class AdminUsersController extends Controller
             ]);
         $email = $request->input('email');       
         $user = Member::where('email', $email)->first();      
-        
+      
         if ($user) {
-            $token = Str::random(10);// tạo mã token            
+            $token = Str::random(10);// tạo mã token       
+            $expiresAt = now()->addHours(1);     
             Member::where('email', $email)
         ->update([
-            'password' => $token,            
+            'reset_token' => $token,
+            'reset_token_expires_at' => $expiresAt,         
         ]);
         $subject = "Quên Mật Khẩu";
         $message =  $token;
+        $request->session()->put('email',$user);
         $request->session()->put('tokenreset',$token);
         Mail::to($email)->send(new resetPassword($subject, $message));
-        return redirect()->route('home')->with('success', 'Mật Khẩu Mới Đã Gửi Về Email Của Bạn');
+        return view('users.pages.checktoken');
         
         }
-        return redirect()->back()->with('error', 'Email Không tồn tại');
+       return redirect()->back()->with('error', 'Email Không tồn tại');
     }
+    function checktoken(Request $request){
+       $id = session()->get('email');
+       $user = Member::find($id);
+        $token = session()->get('tokenreset');      
+        
+           if($request->input('otp') != $token ){
+            return redirect()->route('home')->with('error','Mã OTP Không Chính Xác');            
+           }
+      
+        return view('users.pages.reset',compact('user'));
+    }
+   function resetpassword(Request $request,$id){
+    $request->validate(
+        [
+           
+            'password' => 'required|confirmed',
+            'password_confirmation' => 'required',
+
+        ],
+        [
+            'required' =>  ':attribute không được bỏ trống',
+            'confirmed' =>  'Xác Nhận Mật Khẩu Không Trùng Khớp',
+        ],
+        [
+           
+            'password' => 'Mật Khẩu Mới',
+            'password_confirmation' => 'Xác Nhận Mật Khẩu',
+        ]
+    );
    
+     $user = Member::find($id);
+    $user->update([
+        'password' => $request->input('password'),
+        'reset_token' => "",
+        'reset_token_expires_at' => "",   
+    ]);
+    session()->forget('email');
+    session()->forget('tokenreset');
+    return redirect()->route('home')->with('success','Đổi mật khẩu thành công!');
+   }
     function signup(Request $request)
     {
         $request->validate(

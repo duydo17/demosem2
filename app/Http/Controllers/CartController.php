@@ -61,6 +61,10 @@ class CartController extends Controller
         $user = Member::find($id);
         return view('users.pages.checkout',compact('user'));
     }
+    function cart_mail(){
+        $products = Product::all();
+        return view('mail.template', compact('products'));
+    }
     function add_checkout(Request $request){
         $request->validate(
             [   'address' => 'required',
@@ -115,9 +119,26 @@ class CartController extends Controller
             }
             $subject = "Xác Nhập Đặt Hàng Thành Công";
             $message = "Mã Đơn Hàng Của Bạn Là: ".$order->id;
+            $request->session()->put('order_id',  $order->id);
+            $request->session()->put('order_code',  $order->order_code);
+            $request->session()->put('customer_address', $customer->address);
+            $request->session()->put('payment', $order->payment);
+            $request->session()->put('phone', $customer->phone);
+            $request->session()->put('cart_total', $order->cart_total);
+            $request->session()->put('cart', Cart::content());
+            $request->session()->put('qty', $order->product_qty);
+            
             Mail::to($user->email)
             ->send(new orderMail($subject,$message));
             Cart::destroy();
+            session()->forget('order_id');
+            session()->forget('order_code');
+            session()->forget('customer_address');
+            session()->forget('payment');
+            session()->forget('phone');
+            session()->forget('cart_total');
+            session()->forget('cart');
+            session()->forget('qty');
             return redirect()->route('home')->with('success','Đặt Hàng Thành Công');
         }else{
             return redirect()->route('home')->with('error','Chưa có sản phẩm trong giỏ hàng');

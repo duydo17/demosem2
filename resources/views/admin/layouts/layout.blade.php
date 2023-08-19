@@ -26,6 +26,7 @@
     <script src="{{asset('admin/js/plugins/ckeditor/ckeditor.js')}}"></script>
     <script src="{{asset('admin/js/main.js')}}"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
 
  
 </head>
@@ -38,6 +39,10 @@
     }
     button{
         border-radius: 10px;  
+    }
+    input{
+        border-radius: 10px;
+        border-color: green;
     }
 </style>
 <body>
@@ -98,9 +103,7 @@
                                 <li>
                                     <a href="{{route('list.order')}}" title="">Danh sách đơn hàng</a>
                                 </li>
-                                <li>
-                                    <a href="{{route('list.customer')}}" title="">Danh sách khách hàng</a>
-                                </li>
+                              
                             </ul>
                         </li>
                         <li>

@@ -53,7 +53,7 @@
                     <select name="status">
                      <option value="đang đóng gói" {{old('status',$orders->status)== 'đang đóng gói' ? 'selected' : ''}}>Đang Đóng Gói</option>                       
                      <option value="đang vận chuyển" {{old('status',$orders->status)== 'đang vận chuyển' ? 'selected' : ''}}>Đang Vận Chuyển</option>                       
-                     <option value="đang giao hàng" {{old('status',$orders->status)== 'đang giao hàng' ? 'selected' : ''}}>Đang Giao Hàng</option>      
+                     
                      <option value="hủy đơn hàng" {{old('status',$orders->status)== 'hủy đơn hàng' ? 'selected' : ''}}>Hủy Đơn Hàng</option>                   
                      <option value="giao thành công" {{old('status',$orders->status)== 'giao thành công' ? 'selected' : ''}}>Giao Hàng Thành Công</option>                                                
                     </select>
